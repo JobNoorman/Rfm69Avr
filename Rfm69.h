@@ -42,6 +42,7 @@ private:
     };
 
     void setMode(Mode mode);
+    void writeFrame(const Frame& frame);
 
     uint8_t readRegister(Reg reg);
     void writeRegister(Reg reg, uint8_t value);

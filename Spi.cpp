@@ -1,3 +1,5 @@
+#include "Spi.h"
+
 #include <avr/io.h>
 
 void SpiInit()
@@ -29,4 +31,19 @@ void SpiSelect()
 void SpiDeselect()
 {
     PORTB |= (1 << PORTB2);
+}
+
+SpiSession::SpiSession()
+{
+    SpiSelect();
+}
+
+SpiSession::~SpiSession()
+{
+    SpiDeselect();
+}
+
+uint8_t SpiSession::transfer(uint8_t b)
+{
+    return SpiTransfer(b);
 }

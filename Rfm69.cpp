@@ -28,6 +28,25 @@ namespace
                   "Network ID cannot contain 0-bytes");
 }
 
+namespace
+{
+    struct SpiReadSession : SpiSession
+    {
+        SpiReadSession(Rfm69::Reg reg)
+        {
+            transfer(static_cast<uint8_t>(reg));
+        }
+    };
+
+    struct SpiWriteSession : SpiSession
+    {
+        SpiWriteSession(Rfm69::Reg reg)
+        {
+            transfer(static_cast<uint8_t>(reg) | Rfm69::RegWriteFlag);
+        }
+    };
+}
+
 namespace Rfm69
 {
 
@@ -94,20 +113,7 @@ NodeAddress Rfm69::nodeAddress()
 
 void Rfm69::send(const Frame& frame)
 {
-    // Read this first since we cannot read register while writing the FIFO
-    auto source = nodeAddress();
-
-    SpiSelect();
-    SpiTransfer(static_cast<uint8_t>(Reg::Fifo) | RegWriteFlag);
-    SpiTransfer(frame.length + 2);
-    SpiTransfer(frame.destination);
-    SpiTransfer(source);
-
-    for (size_t i = 0; i < frame.length; i++)
-        SpiTransfer(frame.payload[i]);
-
-    SpiDeselect();
-
+    writeFrame(frame);
     setMode(Mode::Tx);
 
     while (!(readRegister(Reg::IrqFlags2) & IrqFlags2::PacketSent)) {}
@@ -123,9 +129,8 @@ void Rfm69::receive(Frame& frame)
 
     setMode(Mode::Standby);
 
-    SpiSelect();
-    SpiTransfer(static_cast<uint8_t>(Reg::Fifo));
-    auto length = SpiTransfer(0) - 2;
+    SpiReadSession spi{Reg::Fifo};
+    auto length = spi.transfer() - 2;
 
     if (length > frame.length)
     {
@@ -135,13 +140,11 @@ void Rfm69::receive(Frame& frame)
     }
 
     frame.length = length;
-    frame.destination = SpiTransfer(0);
-    frame.source = SpiTransfer(0);
+    frame.destination = spi.transfer();
+    frame.source = spi.transfer();
 
     for (uint8_t i = 0; i < length; i++)
-        frame.payload[i] = SpiTransfer(0);
-
-    SpiDeselect();
+        frame.payload[i] = spi.transfer();
 }
 
 void Rfm69::setMode(Mode mode)
@@ -156,21 +159,30 @@ void Rfm69::setMode(Mode mode)
     while (!(readRegister(Reg::IrqFlags1) & IrqFlags1::ModeReady)) {}
 }
 
+void Rfm69::writeFrame(const Frame& frame)
+{
+    // Read this first since we cannot read registers while writing the FIFO
+    auto source = nodeAddress();
+
+    SpiWriteSession spi{Reg::Fifo};
+    spi.transfer(frame.length + 2);
+    spi.transfer(frame.destination);
+    spi.transfer(source);
+
+    for (size_t i = 0; i < frame.length; i++)
+        spi.transfer(frame.payload[i]);
+}
+
 uint8_t Rfm69::readRegister(Reg reg)
 {
-    SpiSelect();
-    SpiTransfer(static_cast<uint8_t>(reg));
-    auto value = SpiTransfer(0);
-    SpiDeselect();
-    return value;
+    SpiReadSession spi{reg};
+    return spi.transfer();
 }
 
 void Rfm69::writeRegister(Reg reg, uint8_t value)
 {
-    SpiSelect();
-    SpiTransfer(static_cast<uint8_t>(reg) | RegWriteFlag);
-    SpiTransfer(value);
-    SpiDeselect();
+    SpiWriteSession spi{reg};
+    spi.transfer(value);
 }
 
 void Rfm69::printRegister(Reg reg)
