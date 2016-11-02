@@ -3,10 +3,6 @@
 #include "Spi.h"
 #include "Debug.h"
 
-#ifndef RFM69_FREQUENCY
-#define RFM69_FREQUENCY 868
-#endif
-
 #ifndef RFM69_NETWORK_ID
 #define RFM69_NETWORK_ID 0x0101
 #endif
@@ -17,11 +13,6 @@
 
 namespace
 {
-    constexpr uint32_t Frf    = RFM69_FREQUENCY * 1'000'000 / Rfm69::Fstep;
-    constexpr uint8_t  FrfMsb = (Frf >> 16) & 0xff;
-    constexpr uint8_t  FrfMid = (Frf >>  8) & 0xff;
-    constexpr uint8_t  FrfLsb =  Frf        & 0xff;
-
     constexpr uint8_t SyncValue1 = (RFM69_NETWORK_ID >> 8) & 0xff;
     constexpr uint8_t SyncValue2 =  RFM69_NETWORK_ID       & 0xff;
     static_assert(SyncValue1 != 0x00 && SyncValue2 != 0x00,
@@ -73,10 +64,7 @@ Rfm69::Rfm69()
     // ModulationShaping: No shaping (default)
     // BitRate: 4.8 kb/s (default)
     // Fdev (frequency deviation): 5 kHz (default)
-    // Frf (carrier frequency)
-    writeRegister(Reg::FrfMsb, FrfMsb);
-    writeRegister(Reg::FrfMid, FrfMid);
-    writeRegister(Reg::FrfLsb, FrfLsb);
+    // Frf (carrier frequency): 915 MHz (default)
 
     // Packet engine configuration
     // PreambleSize: 3 (default)
@@ -99,6 +87,18 @@ Rfm69::Rfm69()
     // NodeAdrs
     setNodeAddress(RFM69_NODE_ADDRESS);
     // BroadcastAdrs: 0x00 (default, not used)
+}
+
+void Rfm69::setFrequency(Frequency frequency)
+{
+    uint32_t frf    = frequency * 1'000'000 / Fstep;
+    uint8_t  frfMsb = (frf >> 16) & 0xff;
+    uint8_t  frfMid = (frf >>  8) & 0xff;
+    uint8_t  frfLsb =  frf        & 0xff;
+
+    writeRegister(Reg::FrfMsb, frfMsb);
+    writeRegister(Reg::FrfMid, frfMid);
+    writeRegister(Reg::FrfLsb, frfLsb);
 }
 
 void Rfm69::setNodeAddress(NodeAddress address)
