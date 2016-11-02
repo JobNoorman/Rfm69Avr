@@ -87,6 +87,8 @@ Rfm69::Rfm69()
     // NodeAdrs
     setNodeAddress(RFM69_NODE_ADDRESS);
     // BroadcastAdrs: 0x00 (default, not used)
+    // FifoThresh: Start packet transmission when FIFO is not empty
+    writeRegister(Reg::FifoThresh, FifoThresh::TxStartCondition::FifoNotEmpty);
 }
 
 void Rfm69::setFrequency(Frequency frequency)

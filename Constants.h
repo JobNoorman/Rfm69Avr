@@ -203,6 +203,17 @@ namespace IrqFlags2
     };
 }
 
+namespace FifoThresh
+{
+    namespace TxStartCondition
+    {
+        enum
+        {
+            FifoNotEmpty = (1 << 7)
+        };
+    }
+}
+
 enum
 {
     RegWriteFlag = 0x80
