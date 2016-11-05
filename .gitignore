@@ -1,2 +1,3 @@
-*.o
-*.d
+build/
+.kdev4/
+*.kdev4
