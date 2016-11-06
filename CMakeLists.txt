@@ -30,3 +30,5 @@ set(PRIVATE_FEATURES
 target_compile_features(rfm69
                         PUBLIC  ${PUBLIC_FEATURES}
                         PRIVATE ${PRIVATE_FEATURES})
+
+add_subdirectory(examples/)
