@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 project(Rfm69Avr)
 
+add_compile_options(-Wall)
+
 set(SRC
     src/Spi.cpp
     src/Rfm69.cpp)
