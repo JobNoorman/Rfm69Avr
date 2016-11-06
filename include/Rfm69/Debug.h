@@ -1,7 +1,7 @@
 #ifndef RFM69_DEBUG_H
 #define RFM69_DEBUG_H
 
-#ifdef DEBUG
+#ifndef NDEBUG
  #include <stdio.h>
  #define DBG_PRINTF printf
  #define DBG_PUTS   puts
