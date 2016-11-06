@@ -1,4 +1,4 @@
-#include "Uart.h"
+#include "UartStdio/UartStdio.h"
 
 #include "Rfm69/Rfm69.h"
 
@@ -9,7 +9,7 @@
 
 int main()
 {
-    Uart::Init();
+    UartStdio::Init();
 
     Rfm69::Rfm69 radio;
     radio.setFrequency(868);
