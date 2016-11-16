@@ -31,4 +31,8 @@ target_compile_features(rfm69
                         PUBLIC  ${PUBLIC_FEATURES}
                         PRIVATE ${PRIVATE_FEATURES})
 
-add_subdirectory(examples/)
+option(RFM69_BUILD_EXAMPLES "Build examples" OFF)
+
+if (RFM69_BUILD_EXAMPLES)
+    add_subdirectory(examples/)
+endif ()
