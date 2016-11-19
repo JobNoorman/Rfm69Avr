@@ -133,6 +133,16 @@ NodeAddress Rfm69::nodeAddress()
     return readRegister(Reg::NodeAdrs);
 }
 
+void Rfm69::setPreambleSize(PreambleSize size)
+{
+    uint16_t sizeVal = size;
+    uint8_t  sizeMsb = sizeVal >> 8;
+    uint8_t  sizeLsb = sizeVal & 0xff;
+
+    writeRegister(Reg::PreambleMsb, sizeMsb);
+    writeRegister(Reg::PreambleLsb, sizeLsb);
+}
+
 void Rfm69::send(const Frame& frame)
 {
     writeFrame(frame);

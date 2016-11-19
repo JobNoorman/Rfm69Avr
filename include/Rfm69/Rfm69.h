@@ -11,6 +11,7 @@ namespace Rfm69
 using NodeAddress = uint8_t;
 using Frequency   = uint32_t;
 using BitRate     = uint32_t;
+using PreambleSize = uint16_t;
 
 namespace Suffixes
 {
@@ -54,6 +55,7 @@ public:
     void setBitRate(BitRate bitRate);
     void setNodeAddress(NodeAddress address);
     NodeAddress nodeAddress();
+    void setPreambleSize(PreambleSize size);
 
     void send(const Frame& frame);
     void receive(Frame& frame);
