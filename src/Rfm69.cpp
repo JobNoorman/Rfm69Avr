@@ -103,6 +103,16 @@ void Rfm69::setFrequency(Frequency frequency)
     writeRegister(Reg::FrfLsb, frfLsb);
 }
 
+void Rfm69::setFrequencyDeviation(Frequency fdev)
+{
+    uint16_t fdevVal = fdev / Fstep;
+    uint8_t  fdevMsb = fdevVal >> 8;
+    uint8_t  fdevLsb = fdevVal & 0xff;
+
+    writeRegister(Reg::FdevMsb, fdevMsb);
+    writeRegister(Reg::FdevLsb, fdevLsb);
+}
+
 void Rfm69::setBitRate(BitRate bitRate)
 {
     uint16_t bitRateVal = Fxosc / bitRate;

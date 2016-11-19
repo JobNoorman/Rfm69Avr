@@ -50,6 +50,7 @@ public:
     Rfm69();
 
     void setFrequency(Frequency frequency);
+    void setFrequencyDeviation(Frequency fdev);
     void setBitRate(BitRate bitRate);
     void setNodeAddress(NodeAddress address);
     NodeAddress nodeAddress();
