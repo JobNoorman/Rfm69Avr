@@ -9,10 +9,12 @@
 
 int main()
 {
+    using namespace Rfm69::Suffixes;
+
     UartStdio::Init();
 
     Rfm69::Rfm69 radio;
-    radio.setFrequency(868000000);
+    radio.setFrequency(868_MHz);
     radio.setNodeAddress(SENDER_ADDRESS);
 
     uint8_t buf[64];

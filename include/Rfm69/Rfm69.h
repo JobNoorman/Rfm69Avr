@@ -12,6 +12,29 @@ using NodeAddress = uint8_t;
 using Frequency   = uint32_t;
 using BitRate     = uint32_t;
 
+namespace Suffixes
+{
+    constexpr Frequency operator"" _kHz(long double f)
+    {
+        return f * 1'000;
+    }
+
+    constexpr Frequency operator"" _kHz(unsigned long long int f)
+    {
+        return f * 1'000;
+    }
+
+    constexpr Frequency operator"" _MHz(long double f)
+    {
+        return f * 1'000'000;
+    }
+
+    constexpr Frequency operator"" _MHz(unsigned long long int f)
+    {
+        return f * 1'000'000;
+    }
+}
+
 struct Frame
 {
     uint8_t length;
