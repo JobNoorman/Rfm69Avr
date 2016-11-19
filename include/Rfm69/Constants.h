@@ -132,6 +132,52 @@ namespace OpMode
     }
 }
 
+namespace DataModul
+{
+    namespace DataMode
+    {
+        enum
+        {
+            Packet                           = (0b00 << 5),
+            ContinuousWithBitSynchronizer    = (0b10 << 5),
+            ContinuousWithoutBitSynchronizer = (0b11 << 5)
+        };
+    }
+
+    namespace ModulationType
+    {
+        enum
+        {
+            Fsk = (0b00 << 3),
+            Ook = (0b01 << 3)
+        };
+    }
+
+    namespace ModulationShaping
+    {
+        namespace Fsk
+        {
+            enum
+            {
+                NoShaping          = 0b00,
+                GaussianFilterBt10 = 0b01,
+                GaussianFilterBt05 = 0b10,
+                GaussianFilterBt03 = 0b11
+            };
+        }
+
+        namespace Ook
+        {
+            enum
+            {
+                NoShaping           = 0b00,
+                FilteringFCutoffBr  = 0b01,
+                FilteringFCutoff2Br = 0b10,
+            };
+        }
+    }
+}
+
 namespace SyncConfig
 {
     enum
