@@ -9,7 +9,7 @@ namespace Rfm69
 {
 
 using NodeAddress = uint8_t;
-using Frequency   = float;
+using Frequency   = uint32_t;
 using BitRate     = uint32_t;
 
 struct Frame

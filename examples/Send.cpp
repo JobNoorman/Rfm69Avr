@@ -12,7 +12,7 @@ int main()
     UartStdio::Init();
 
     Rfm69::Rfm69 radio;
-    radio.setFrequency(868);
+    radio.setFrequency(868000000);
     radio.setNodeAddress(SENDER_ADDRESS);
 
     uint8_t buf[64];

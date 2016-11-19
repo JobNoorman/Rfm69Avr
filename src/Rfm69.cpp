@@ -93,7 +93,7 @@ Rfm69::Rfm69()
 
 void Rfm69::setFrequency(Frequency frequency)
 {
-    uint32_t frf    = frequency * 1'000'000 / Fstep;
+    uint32_t frf    = frequency / Fstep;
     uint8_t  frfMsb = (frf >> 16) & 0xff;
     uint8_t  frfMid = (frf >>  8) & 0xff;
     uint8_t  frfLsb =  frf        & 0xff;
