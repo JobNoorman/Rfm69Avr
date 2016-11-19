@@ -11,6 +11,8 @@
 #define RFM69_NODE_ADDRESS 1
 #endif
 
+using namespace Rfm69::Suffixes;
+
 namespace
 {
     constexpr uint8_t SyncValue1 = (RFM69_NETWORK_ID >> 8) & 0xff;
@@ -53,22 +55,29 @@ Rfm69::Rfm69()
         return;
     }
 
-    setMode(Mode::Standby);
-
     // Configure the radio
 
     // Common configuration
-    // Mode: Standby (default)
-    // DataMode: Packet (default)
-    // ModulationType: FSK (default)
-    // ModulationShaping: No shaping (default)
-    // BitRate: 4.8 kb/s (default)
-    // Fdev (frequency deviation): 5 kHz (default)
-    // Frf (carrier frequency): 915 MHz (default)
+    // OpMode: Standby mode, disable listen mode, automatic sequencer on
+    writeRegister(Reg::OpMode, OpMode::Mode::Stdby);
+    writeRegister(Reg::DataModul,
+                  DataModul::DataMode::Packet    |
+                  DataModul::ModulationType::Fsk |
+                  DataModul::ModulationShaping::Fsk::NoShaping);
+
+    // Use the default values for bit rate and frequency deviation
+    setBitRate(4800);
+    setFrequencyDeviation(5_kHz);
+
+    // TODO These values are taken from the RadioHead driver and seem to work
+    // well for the default bit rate of 4.8 kbps. This should probably be set to
+    // an appropriate value automatically in setBitRate().
+    writeRegister(Reg::RxBw, 0xf4);
+    writeRegister(Reg::AfcBw, 0xf4);
 
     // Packet engine configuration
-    // PreambleSize: 3 (default)
-    // SyncConfig: Enable 1 byte sync word detection and no error tolerance
+    setPreambleSize(4);
+    // SyncConfig: Enable 2 byte sync word detection and no error tolerance
     writeRegister(Reg::SyncConfig,
                   SyncConfig::SyncOn      |
                   SyncConfig::SyncSize<2> |
@@ -83,10 +92,10 @@ Rfm69::Rfm69()
                   PacketConfig1::CrcOn             |
                   PacketConfig1::DcFree::Whitening |
                   PacketConfig1::AddressFiltering::NodeAddress);
-    // PayloadLength: Maximum size of incoming packets, 64 (default)
-    // NodeAdrs
+    // PayloadLength: Maximum size of incoming packets, 64 to ensure that the
+    //                whole packet always fits in the FIFO
+    writeRegister(Reg::PayloadLength, 64);
     setNodeAddress(RFM69_NODE_ADDRESS);
-    // BroadcastAdrs: 0x00 (default, not used)
     // FifoThresh: Start packet transmission when FIFO is not empty
     writeRegister(Reg::FifoThresh, FifoThresh::TxStartCondition::FifoNotEmpty);
 }
