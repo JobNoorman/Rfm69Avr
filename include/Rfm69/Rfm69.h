@@ -8,9 +8,9 @@
 namespace Rfm69
 {
 
-using NodeAddress = uint8_t;
-using Frequency   = uint32_t;
-using BitRate     = uint32_t;
+using NodeAddress  = uint8_t;
+using Frequency    = uint32_t;
+using BitRate      = uint32_t;
 using PreambleSize = uint16_t;
 
 namespace Suffixes
