@@ -10,6 +10,7 @@ namespace Rfm69
 
 using NodeAddress = uint8_t;
 using Frequency   = float;
+using BitRate     = uint32_t;
 
 struct Frame
 {
@@ -26,6 +27,7 @@ public:
     Rfm69();
 
     void setFrequency(Frequency frequency);
+    void setBitRate(BitRate bitRate);
     void setNodeAddress(NodeAddress address);
     NodeAddress nodeAddress();
 

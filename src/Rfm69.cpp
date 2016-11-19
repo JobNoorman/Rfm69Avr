@@ -103,6 +103,16 @@ void Rfm69::setFrequency(Frequency frequency)
     writeRegister(Reg::FrfLsb, frfLsb);
 }
 
+void Rfm69::setBitRate(BitRate bitRate)
+{
+    uint16_t bitRateVal = Fxosc / bitRate;
+    uint8_t  bitRateMsb = bitRateVal >> 8;
+    uint8_t  bitRateLsb = bitRateVal & 0xff;
+
+    writeRegister(Reg::BitrateMsb, bitRateMsb);
+    writeRegister(Reg::BitrateLsb, bitRateLsb);
+}
+
 void Rfm69::setNodeAddress(NodeAddress address)
 {
     writeRegister(Reg::NodeAdrs, address);
