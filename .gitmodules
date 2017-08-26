@@ -1,3 +1,3 @@
 [submodule "examples/UartStdio"]
-	path = examples/UartStdio
+	path = dependencies/UartStdio
 	url = https://github.com/JobNoorman/UartStdioAvr.git

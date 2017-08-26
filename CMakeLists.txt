@@ -3,6 +3,8 @@ project(Rfm69Avr)
 
 add_compile_options(-Wall -std=c++17)
 
+add_subdirectory(dependencies/)
+
 set(SRC
     src/Spi.cpp
     src/Rfm69.cpp)
